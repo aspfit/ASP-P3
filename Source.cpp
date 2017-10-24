@@ -3,15 +3,11 @@ using namespace std;
 
 class Queue {
 	int counter;
-	int front;
-	int rear;
 	int * qArray;
 	
 public:
 	Queue() {
 		this->counter = 0;
-		this->front = -1;
-		this->rear = -1;
 		this->qArray = nullptr;
 	}
 	~Queue() {
