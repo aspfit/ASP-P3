@@ -1,73 +1,64 @@
 #include <iostream>
 using namespace std;
+const int MAX_SIZE = 10;
 
 class Queue {
+	int qArray[MAX_SIZE];
 	int counter;
-	int * qArray;
-	
+	int front;
+	int rear;
 public:
 	Queue() {
+		this->front = 0;
+		this->rear = 0;
 		this->counter = 0;
-		this->qArray = nullptr;
-	}
-	~Queue() {
-		delete[]this->qArray;
 	}
 	void Enque(int data) {
+		if (this->counter == 10) {
+			cout << "Queue is full!" << endl;
+			return;
+		}
+		this->qArray[this->rear] = data;
+		this->rear++;
+		if (this->rear == 10)
+			this->rear = 0;
 		this->counter++;
-		if (this->counter > 1) {
-			int *tempArray = new int[this->counter];
-			tempArray[this->counter-1] = data;
-			for (int i = 0; i < this->counter - 1; i++) {
-				tempArray[i] = this->qArray[i];
-			}
-			delete[]this->qArray;
-			this->qArray = tempArray;
-		}
-		else {
-			this->qArray = new int[1];
-			this->qArray[0] = data;
-		}
 	}
 	int Deque() {
-		if (this->counter != 0) {
-			this->counter--;
-			int toDeque = this->qArray[0];
-
-			if (this->counter == 0) {
-				delete[]this->qArray;
-				this->qArray = nullptr;
-				return toDeque;
-			}
-			int *tempArray = new int[this->counter];
-			for (int i = 0; i < this->counter + 1; i++) {
-				tempArray[i] = this->qArray[i + 1];
-			}
-			this->qArray = tempArray;
-			return toDeque;
+		if (this->counter == 0) {
+			cout << "Queue is empty! Displaying Error Code (-1)" << endl;
+			return -1;
 		}
-		return -1;
+		int firstOut = this->qArray[this->front];
+		this->front++;
+		this->counter--;
+		return firstOut;
 	}
 	int Size() {
 		return this->counter;
 	}
 	void Print() {
-		for (int i = this->counter-1; i >= 0; i--)
-			cout << this->qArray[i] << endl;
+		cout << endl;
+		for (int i = 0; i < 10; i++) {
+			cout << i << ". " << this->qArray[i] << endl;
+		}
 	}
 };
 
 int main() {
 	Queue newQ;
-	newQ.Enque(3);
-	newQ.Enque(2);
-	newQ.Enque(1);
+	for (int i = 0; i < 10; i++)
+		newQ.Enque(i + 1);
+
+	
+	for (int i = 0; i < 4; i++)
+		cout << newQ.Deque() << endl;
 	newQ.Print();
-	cout << "Dequed: " << newQ.Deque() << endl;
-	newQ.Print();
-	cout << "Size: " << newQ.Size() << endl;
+	newQ.Enque(11);
+	newQ.Enque(12);
 	newQ.Print();
 
 	getchar();
 	return 0;
 }
+
