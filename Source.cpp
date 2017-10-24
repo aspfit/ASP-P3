@@ -1,70 +1,112 @@
 #include <iostream>
 using namespace std;
 
+struct Node {
+	int Head;
+	Node *Next;
+
+	Node(int info, Node *next) {
+		this->Head = info;
+		this->Next = next;
+	}
+};
+
+class LinkedList {
+	Node *Head;
+public:
+	LinkedList() {
+		this->Head = nullptr;
+	}
+	void AddFirst(int data) {
+		Node *newNode = new Node(data, this->Head);
+		this->Head = newNode;
+	}
+	int removeLast() {
+		if (this->Head->Next == nullptr) {
+			int last = this->Head->Head;
+
+			delete Head;
+			Head = nullptr;
+
+			return last;
+		}
+
+		Node *temp = this->Head;
+		Node *previousTemp = nullptr;
+		while (temp->Next != nullptr) {
+			previousTemp = temp;
+			temp = temp->Next;
+		}
+		previousTemp->Next = nullptr;
+		int last = temp->Head;
+		delete temp;
+		return last;
+	}
+	int size() {
+		if (this->Head == nullptr) {
+			return 0;
+		}
+		int counter = 0;
+		Node *temp = this->Head;
+		while (temp != nullptr) {
+			counter++;
+			temp = temp->Next;
+		}
+		return counter;
+	}
+	void print() {
+		if (this->Head == nullptr) {
+			cout << "None to display" << endl;
+			return;
+		}
+		Node *temp = this->Head;
+		while (temp != nullptr) {
+			cout << temp->Head << endl;
+			temp = temp->Next;
+		}
+	}
+};
+
 class Queue {
+	LinkedList qArray;
 	int counter;
-	int * qArray;
-	
 public:
 	Queue() {
 		this->counter = 0;
-		this->qArray = nullptr;
-	}
-	~Queue() {
-		delete[]this->qArray;
 	}
 	void Enque(int data) {
 		this->counter++;
-		if (this->counter > 1) {
-			int *tempArray = new int[this->counter];
-			tempArray[this->counter-1] = data;
-			for (int i = 0; i < this->counter - 1; i++) {
-				tempArray[i] = this->qArray[i];
-			}
-			delete[]this->qArray;
-			this->qArray = tempArray;
-		}
-		else {
-			this->qArray = new int[1];
-			this->qArray[0] = data;
-		}
+		this->qArray.AddFirst(data);
 	}
 	int Deque() {
-		if (this->counter != 0) {
-			this->counter--;
-			int toDeque = this->qArray[0];
-
-			if (this->counter == 0) {
-				delete[]this->qArray;
-				this->qArray = nullptr;
-				return toDeque;
-			}
-			int *tempArray = new int[this->counter];
-			for (int i = 0; i < this->counter + 1; i++) {
-				tempArray[i] = this->qArray[i + 1];
-			}
-			this->qArray = tempArray;
-			return toDeque;
-		}
-		return -1;
+		return this->qArray.removeLast();
 	}
 	int Size() {
-		return this->counter;
+		return this->qArray.size();
 	}
 	void Print() {
-		for (int i = this->counter-1; i >= 0; i--)
-			cout << this->qArray[i] << endl;
+		this->qArray.print();
 	}
 };
 
 int main() {
 	Queue newQ;
-	newQ.Enque(3);
-	newQ.Enque(2);
 	newQ.Enque(1);
+	newQ.Enque(2);
+	newQ.Enque(3);
 	newQ.Print();
-	cout << "Dequed: " << newQ.Deque() << endl;
+	cout << "Size: " << newQ.Size() << endl;
+	cout << "Dequeing: " << newQ.Deque() << endl;
+	cout << "Size: " << newQ.Size() << endl;
 	newQ.Print();
+	cout << endl;
+	newQ.Enque(10);
+	newQ.Enque(11);
+	newQ.Print();
+	cout << "Dequeing: " << newQ.Deque() << endl;
+	cout << "Dequeing: " << newQ.Deque() << endl;
+	cout << "Dequeing: " << newQ.Deque() << endl;
+	cout << "Dequeing: " << newQ.Deque() << endl;
 	cout << "Size: " << newQ.Size() << endl;
 	newQ.Print();
 
